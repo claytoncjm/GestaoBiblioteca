@@ -2,7 +2,6 @@ using GestaoBibliotecaAPI.Interfaces;
 using GestaoBibliotecaAPI.Model;
 using GestaoBibliotecaAPI.Services;
 using Moq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace GestaoBibliotecaAPI.Tests.Services
@@ -21,7 +20,7 @@ namespace GestaoBibliotecaAPI.Tests.Services
         }
 
         [Fact]
-        public async Task Deve_Criar_Emprestimo_Com_Sucesso()
+        public void Deve_Criar_Emprestimo_Com_Sucesso()
         {
             // Arrange
             var livroId = 1;
@@ -38,7 +37,7 @@ namespace GestaoBibliotecaAPI.Tests.Services
                 .Returns(livro);
 
             // Act
-            var emprestimo = await _emprestimoService.CriarEmprestimoAsync(livroId);
+            var emprestimo = _emprestimoService.Create(livroId);
 
             // Assert
             Assert.NotNull(emprestimo);
@@ -48,7 +47,7 @@ namespace GestaoBibliotecaAPI.Tests.Services
         }
 
         [Fact]
-        public async Task Nao_Deve_Criar_Emprestimo_Sem_Exemplares_Disponiveis()
+        public void Nao_Deve_Criar_Emprestimo_Sem_Exemplares_Disponiveis()
         {
             // Arrange
             var livroId = 1;
@@ -65,12 +64,11 @@ namespace GestaoBibliotecaAPI.Tests.Services
                 .Returns(livro);
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(
-                () => _emprestimoService.CriarEmprestimoAsync(livroId));
+            Assert.Throws<InvalidOperationException>(() => _emprestimoService.Create(livroId));
         }
 
         [Fact]
-        public async Task Deve_Devolver_Livro_Com_Sucesso()
+        public void Deve_Devolver_Livro_Com_Sucesso()
         {
             // Arrange
             var emprestimoId = 1;
@@ -85,15 +83,15 @@ namespace GestaoBibliotecaAPI.Tests.Services
                 .Returns(new[] { emprestimo });
 
             // Act
-            await _emprestimoService.DevolverLivroAsync(emprestimoId);
+            _emprestimoService.DevolverLivro(emprestimoId);
 
             // Assert
-            _mockEmprestimoRepo.Verify(repo => repo.UpdateStatus(emprestimoId, "Devolvido"), Times.Once);
+            _mockEmprestimoRepo.Verify(repo => repo.UpdateStatus(emprestimoId, EmprestimoStatus.Devolvido), Times.Once);
             _mockLivroRepo.Verify(repo => repo.UpdateQuantidade(1, 1), Times.Once);
         }
 
         [Fact]
-        public async Task Nao_Deve_Devolver_Livro_Ja_Devolvido()
+        public void Nao_Deve_Devolver_Livro_Ja_Devolvido()
         {
             // Arrange
             var emprestimoId = 1;
@@ -108,8 +106,7 @@ namespace GestaoBibliotecaAPI.Tests.Services
                 .Returns(new[] { emprestimo });
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(
-                () => _emprestimoService.DevolverLivroAsync(emprestimoId));
+            Assert.Throws<InvalidOperationException>(() => _emprestimoService.DevolverLivro(emprestimoId));
         }
     }
 }

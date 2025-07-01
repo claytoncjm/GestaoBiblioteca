@@ -1,7 +1,6 @@
 using GestaoBibliotecaAPI.Model;
 using GestaoBibliotecaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace GestaoBibliotecaAPI.Controllers
 {
@@ -17,7 +16,7 @@ namespace GestaoBibliotecaAPI.Controllers
         }
 
         [HttpPost("{livroId}")]
-        public ActionResult<EmprestimoModel> SolicitarEmprestimo(int livroId)
+        public ActionResult<EmprestimoModel> CriarEmprestimo(int livroId)
         {
             var emprestimo = _emprestimoService.Create(livroId);
             return CreatedAtAction(nameof(GetEmprestimo), new { id = emprestimo.EmprestimoId }, emprestimo);
@@ -31,7 +30,7 @@ namespace GestaoBibliotecaAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<EmprestimoModel>> GetAllEmprestimos()
+        public ActionResult<IEnumerable<EmprestimoModel>> ListarEmprestimos()
         {
             var emprestimos = _emprestimoService.GetAll();
             return Ok(emprestimos);

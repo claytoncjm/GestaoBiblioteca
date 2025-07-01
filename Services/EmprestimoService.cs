@@ -15,7 +15,7 @@ namespace GestaoBibliotecaAPI.Services
             _livroRepository = livroRepository;
         }
 
-        public async Task<EmprestimoModel> CriarEmprestimoAsync(int livroId)
+        public async Task<EmprestimoModel> CreateAsync(int livroId)
         {
             var livro = await _livroRepository.ObterLivroPorIdAsync(livroId);
             if (livro == null)
@@ -23,9 +23,10 @@ namespace GestaoBibliotecaAPI.Services
                 throw new ArgumentException("Livro não encontrado");
             }
 
-            if (livro.QuantidadeDisponivel <= 0)
+            var emprestimosAtivos = await _emprestimoRepository.ObterEmprestimosPorLivroIdAsync(livroId);
+            if (emprestimosAtivos.Any(e => e.Status == "Ativo"))
             {
-                throw new InvalidOperationException("Não há exemplares disponíveis para empréstimo");
+                throw new InvalidOperationException("Já existe um empréstimo ativo para este livro");
             }
 
             var emprestimo = new EmprestimoModel
@@ -43,7 +44,9 @@ namespace GestaoBibliotecaAPI.Services
 
         public async Task DevolverLivroAsync(int emprestimoId)
         {
-            var emprestimo = await _emprestimoRepository.ObterEmprestimosPorLivroIdAsync(emprestimoId).FirstOrDefaultAsync();
+            var emprestimos = await _emprestimoRepository.ObterEmprestimosPorLivroIdAsync(emprestimoId);
+            var emprestimo = emprestimos.FirstOrDefault(e => e.EmprestimoId == emprestimoId);
+
             if (emprestimo == null)
             {
                 throw new ArgumentException("Empréstimo não encontrado");
@@ -51,14 +54,17 @@ namespace GestaoBibliotecaAPI.Services
 
             if (emprestimo.Status == "Devolvido")
             {
-                throw new InvalidOperationException("Este livro já foi devolvido");
+                throw new InvalidOperationException("Este empréstimo já foi devolvido");
             }
+
+            emprestimo.Status = "Devolvido";
+            emprestimo.DtaDevolucao = DateTime.Now;
 
             await _emprestimoRepository.AtualizarStatusEmprestimoAsync(emprestimoId, "Devolvido");
             await _livroRepository.AtualizarQuantidadeDisponivelAsync(emprestimo.LivroId, 1);
         }
 
-        public async Task<IEnumerable<EmprestimoModel>> ListarEmprestimosAsync()
+        public async Task<IEnumerable<EmprestimoModel>> GetAllAsync()
         {
             return await _emprestimoRepository.ListarEmprestimosAsync();
         }
