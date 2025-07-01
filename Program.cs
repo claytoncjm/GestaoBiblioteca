@@ -12,7 +12,14 @@ builder.Services.AddSwaggerGen();
 
 // Configuração do Entity Framework Core
 builder.Services.AddDbContext<BibliotecaDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), 
+        sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null);
+        }));
 
 // Configuração dos serviços
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
@@ -21,6 +28,22 @@ builder.Services.AddScoped<LivroService>();
 builder.Services.AddScoped<EmprestimoService>();
 
 var app = builder.Build();
+
+// Migrar o banco de dados
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<BibliotecaDbContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro durante a migração do banco de dados");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
