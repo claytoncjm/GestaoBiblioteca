@@ -28,15 +28,14 @@ namespace GestaoBibliotecaAPI.Services
                 throw new InvalidOperationException("Já existe um empréstimo ativo para este livro");
             }
 
-            var emprestimo = new EmprestimoModel
-            {
-                LivroId = livroId,
-                Status = EmprestimoStatus.Ativo
-            };
-
-            _emprestimoRepository.Create(emprestimo);
+            _emprestimoRepository.Create(livroId);
             _livroRepository.UpdateQuantidade(livroId, -1);
 
+            var emprestimo = _emprestimoRepository.GetByLivroId(livroId).FirstOrDefault();
+            if (emprestimo == null)
+            {
+                throw new InvalidOperationException("Erro ao criar empréstimo");
+            }
             return emprestimo;
         }
 
