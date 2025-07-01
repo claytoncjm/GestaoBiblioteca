@@ -16,7 +16,7 @@ builder.Services.AddDbContext<BibliotecaDbContext>(options =>
 
 // Configuração dos serviços
 builder.Services.AddScoped<ILivroRepository, LivroRepository>();
-builder.Services.AddScoped<IEmprestimoRepository, EmprestimoRepository>();
+builder.Services.AddScoped<IEmprestimoRepository, GestaoBibliotecaAPI.Data.EmprestimoRepository>();
 builder.Services.AddScoped<LivroService>();
 builder.Services.AddScoped<EmprestimoService>();
 

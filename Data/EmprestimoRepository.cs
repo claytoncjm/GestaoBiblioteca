@@ -17,13 +17,22 @@ namespace GestaoBibliotecaAPI.Data
 
         public EmprestimoModel Create(int livroId)
         {
+            var livro = _context.Livros.Find(livroId);
+            if (livro == null)
+                throw new ArgumentException("Livro não encontrado");
+
+            if (livro.QuantidadeDisponivel <= 0)
+                throw new InvalidOperationException("Não há exemplares disponíveis para empréstimo");
+
             var emprestimo = new EmprestimoModel
             {
                 LivroId = livroId,
+                Livro = livro,
                 DataEmprestimo = DateTime.Now,
                 Status = EmprestimoStatus.Ativo
             };
 
+            emprestimo.ValidarCriacao(livro);
             _context.Emprestimos.Add(emprestimo);
             _context.SaveChanges();
             return emprestimo;

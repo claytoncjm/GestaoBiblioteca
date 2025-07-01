@@ -50,20 +50,6 @@ namespace GestaoBibliotecaAPI.Tests.Models
             Assert.Equal("Não há exemplares disponíveis para empréstimo", exception.Message);
         }
 
-        [Fact]
-        public void Nao_Deve_Devolver_Livro_Ja_Devolvido()
-        {
-            // Arrange
-            var emprestimo = new EmprestimoModel
-            {
-                Status = EmprestimoStatus.Devolvido
-            };
 
-            // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => 
-                emprestimo.Devolver());
-
-            Assert.Equal("Este empréstimo já foi devolvido", exception.Message);
-        }
     }
 }

@@ -1,7 +1,6 @@
 using GestaoBibliotecaAPI.Model;
 using GestaoBibliotecaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace GestaoBibliotecaAPI.Controllers
 {
@@ -17,7 +16,7 @@ namespace GestaoBibliotecaAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult<LivroModel> CriarLivro([FromBody] LivroModel livro)
+        public ActionResult<LivroModel> CriarLivro(LivroModel livro)
         {
             var novoLivro = _livroService.Create(livro);
             return CreatedAtAction(nameof(GetLivro), new { id = novoLivro.LivroId }, novoLivro);
@@ -35,7 +34,7 @@ namespace GestaoBibliotecaAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<LivroModel>> GetAllLivros()
+        public ActionResult<IEnumerable<LivroModel>> ListarLivros()
         {
             var livros = _livroService.GetAll();
             return Ok(livros);

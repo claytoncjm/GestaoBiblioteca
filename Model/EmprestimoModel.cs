@@ -17,14 +17,7 @@ namespace GestaoBibliotecaAPI.Model
             DataDevolucao = DateTime.MinValue;
         }
 
-        public void Devolver()
-        {
-            if (Status == EmprestimoStatus.Devolvido)
-                throw new InvalidOperationException("Este empréstimo já foi devolvido");
 
-            Status = EmprestimoStatus.Devolvido;
-            DataDevolucao = DateTime.Now;
-        }
 
         public void ValidarCriacao(LivroModel livro)
         {

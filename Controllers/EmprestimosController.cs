@@ -19,7 +19,7 @@ namespace GestaoBibliotecaAPI.Controllers
         public ActionResult<EmprestimoModel> CriarEmprestimo(int livroId)
         {
             var emprestimo = _emprestimoService.Create(livroId);
-            return CreatedAtAction(nameof(GetEmprestimo), new { id = emprestimo.EmprestimoId }, emprestimo);
+            return CreatedAtAction(nameof(GetEmprestimoById), new { id = emprestimo.EmprestimoId }, emprestimo);
         }
 
         [HttpPut("devolver/{id}")]
@@ -27,6 +27,17 @@ namespace GestaoBibliotecaAPI.Controllers
         {
             _emprestimoService.DevolverLivro(id);
             return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<EmprestimoModel> GetEmprestimoById(int id)
+        {
+            var emprestimo = _emprestimoService.GetAll().FirstOrDefault(e => e.EmprestimoId == id);
+            if (emprestimo == null)
+            {
+                return NotFound();
+            }
+            return Ok(emprestimo);
         }
 
         [HttpGet]

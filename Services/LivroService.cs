@@ -1,6 +1,5 @@
 using GestaoBibliotecaAPI.Interfaces;
 using GestaoBibliotecaAPI.Model;
-using System.Threading.Tasks;
 
 namespace GestaoBibliotecaAPI.Services
 {
@@ -15,24 +14,24 @@ namespace GestaoBibliotecaAPI.Services
             _emprestimoRepository = emprestimoRepository;
         }
 
-        public async Task<LivroModel> CriarLivroAsync(LivroModel livro)
+        public LivroModel Create(LivroModel livro)
         {
-            return await _livroRepository.CriarLivroAsync(livro);
+            return _livroRepository.Create(livro);
         }
 
-        public async Task<LivroModel> ObterLivroPorIdAsync(int id)
+        public LivroModel Get(int id)
         {
-            return await _livroRepository.ObterLivroPorIdAsync(id);
+            return _livroRepository.Get(id);
         }
 
-        public async Task<IEnumerable<LivroModel>> ListarLivrosAsync()
+        public IEnumerable<LivroModel> GetAll()
         {
-            return await _livroRepository.ListarLivrosAsync();
+            return _livroRepository.GetAll();
         }
 
-        public async Task AtualizarQuantidadeDisponivelAsync(int livroId, int quantidade)
+        public void UpdateQuantidade(int livroId, int quantidade)
         {
-            await _livroRepository.AtualizarQuantidadeDisponivelAsync(livroId, quantidade);
+            _livroRepository.UpdateQuantidade(livroId, quantidade);
         }
     }
 }
