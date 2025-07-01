@@ -1,9 +1,11 @@
 using GestaoBibliotecaAPI.Data;
+using GestaoBibliotecaAPI.Interfaces;
 using GestaoBibliotecaAPI.Model;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace GestaoBibliotecaAPI.Interfaces
+namespace GestaoBibliotecaAPI.Data
 {
     public class LivroRepository : ILivroRepository
     {
@@ -28,12 +30,16 @@ namespace GestaoBibliotecaAPI.Interfaces
 
         public LivroModel Get(int id)
         {
-            return _context.Livros.Find(id);
+            return _context.Livros
+                .Include(l => l.Emprestimos)
+                .FirstOrDefault(l => l.LivroId == id);
         }
 
         public IEnumerable<LivroModel> GetAll()
         {
-            return _context.Livros.ToList();
+            return _context.Livros
+                .Include(l => l.Emprestimos)
+                .ToList();
         }
 
         public void UpdateQuantidade(int livroId, int quantidade)

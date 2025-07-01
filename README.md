@@ -84,6 +84,21 @@ A camada Services é responsável por:
 
 Os serviços funcionam como uma camada intermediária entre os controllers e os repositórios, garantindo que as operações sejam realizadas de forma segura e consistente.
 
+## Configuração do Banco de Dados
+
+1. Verifique se o SQL Server LocalDB está instalado
+2. Abra o Visual Studio e:
+   - Clique em View > SQL Server Object Explorer
+   - Procure por (localdb)\mssqllocaldb
+   - Ou use o Server Explorer para adicionar uma nova conexão
+
+3. Para criar o banco de dados:
+```bash
+# Abra o Package Manager Console
+Add-Migration InitialCreate -Context BibliotecaDbContext
+Update-Database -Context BibliotecaDbContext
+```
+
 ## Documentação
 
 A API possui documentação Swagger disponível em:
