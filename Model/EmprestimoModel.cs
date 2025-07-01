@@ -42,4 +42,4 @@ namespace GestaoBibliotecaAPI.Model
         Ativo,
         Devolvido
     }
-}
+
