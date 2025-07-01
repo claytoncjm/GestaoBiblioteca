@@ -8,15 +8,10 @@ namespace GestaoBibliotecaAPI.Data
         public DbSet<LivroModel> Livros { get; set; }
         public DbSet<EmprestimoModel> Emprestimos { get; set; }
 
-        public BibliotecaDbContext(DbContextOptions<BibliotecaDbContext> options)
-            : base(options)
-        {
-        }
+        public BibliotecaDbContext(DbContextOptions<BibliotecaDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<EmprestimoModel>()
                 .HasOne(e => e.Livro)
                 .WithMany(l => l.Emprestimos)
@@ -36,8 +31,7 @@ namespace GestaoBibliotecaAPI.Data
             modelBuilder.Entity<EmprestimoModel>()
                 .Property(e => e.Status)
                 .IsRequired()
-                .HasConversion<string>()
-                .HasCheckConstraint("CK_Emprestimo_Status", "[Status] IN ('Ativo', 'Devolvido')");
+                .HasConversion<string>();
         }
     }
 }

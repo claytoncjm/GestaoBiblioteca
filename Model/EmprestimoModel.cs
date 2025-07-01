@@ -8,12 +8,13 @@ namespace GestaoBibliotecaAPI.Model
         public DateTime DataDevolucao { get; set; }
         public EmprestimoStatus Status { get; set; }
 
-        public LivroModel Livro { get; set; }
+        public LivroModel? Livro { get; set; }
 
         public EmprestimoModel()
         {
             DataEmprestimo = DateTime.Now;
             Status = EmprestimoStatus.Ativo;
+            DataDevolucao = DateTime.MinValue;
         }
 
         public void Devolver()
@@ -33,6 +34,7 @@ namespace GestaoBibliotecaAPI.Model
             if (livro.QuantidadeDisponivel <= 0)
                 throw new InvalidOperationException("Não há exemplares disponíveis para empréstimo");
         }
+    }
     }
 
     public enum EmprestimoStatus
