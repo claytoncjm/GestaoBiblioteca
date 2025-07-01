@@ -45,7 +45,7 @@ namespace GestaoBibliotecaAPI.Controllers
             var livro = _livroService.Get(id);
             if (livro == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Livro não encontrado" });
             }
             return Ok(livro);
         }
@@ -59,6 +59,10 @@ namespace GestaoBibliotecaAPI.Controllers
         public ActionResult<IEnumerable<LivroModel>> ListarLivros()
         {
             var livros = _livroService.GetAll();
+            if (!livros.Any())
+            {
+                return Ok(new { message = "Nenhum livro encontrado na biblioteca" });
+            }
             return Ok(livros);
         }
     }

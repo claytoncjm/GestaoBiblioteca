@@ -59,7 +59,7 @@ namespace GestaoBibliotecaAPI.Controllers
             var emprestimo = _emprestimoService.GetAll().FirstOrDefault(e => e.EmprestimoId == id);
             if (emprestimo == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Empréstimo não encontrado" });
             }
             return Ok(emprestimo);
         }
@@ -73,6 +73,10 @@ namespace GestaoBibliotecaAPI.Controllers
         public ActionResult<IEnumerable<EmprestimoModel>> ListarEmprestimos()
         {
             var emprestimos = _emprestimoService.GetAll();
+            if (!emprestimos.Any())
+            {
+                return Ok(new { message = "Nenhum empréstimo encontrado" });
+            }
             return Ok(emprestimos);
         }
     }
