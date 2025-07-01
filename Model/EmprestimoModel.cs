@@ -1,7 +1,11 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace GestaoBibliotecaAPI.Model
 {
     public class EmprestimoModel
     {
+        [Key]
         public int EmprestimoId { get; set; }
         public int LivroId { get; set; }
         public DateTime DataEmprestimo { get; set; }
