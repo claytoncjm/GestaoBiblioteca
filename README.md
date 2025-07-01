@@ -62,14 +62,37 @@ O arquivo `appsettings.json` deve conter a string de conexão para o SQL Server:
 - PUT `/api/emprestimos/devolver/{id}` - Devolver empréstimo
 - GET `/api/emprestimos` - Listar todos os empréstimos
 
-## Testes
+## Testes Unitários
+
+Os testes unitários estão localizados na pasta `Tests` e são executados usando o xUnit. Eles garantem que:
+- As regras de negócio estão sendo aplicadas corretamente
+- Os métodos dos serviços estão funcionando conforme esperado
+- As validações de domínio estão sendo respeitadas
 
 Para executar os testes:
 ```bash
 dotnet test
 ```
 
+## Camada Services
+
+A camada Services é responsável por:
+- Implementar as regras de negócio da aplicação
+- Orquestrar as operações entre os repositórios
+- Validar as operações antes de persistir os dados
+- Gerenciar transações e consistência dos dados
+
+Os serviços funcionam como uma camada intermediária entre os controllers e os repositórios, garantindo que as operações sejam realizadas de forma segura e consistente.
+
 ## Documentação
 
 A API possui documentação Swagger disponível em:
 `http://localhost:5000/swagger`
+
+A documentação inclui:
+- Descrição detalhada de cada endpoint
+- Parâmetros necessários
+- Exemplos de requisições e respostas
+- Códigos de status HTTP esperados
+
+Os summaries foram adicionados nos controllers e métodos para melhorar a documentação.
